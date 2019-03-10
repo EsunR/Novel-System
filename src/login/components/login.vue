@@ -15,6 +15,7 @@
       <el-form-item label="密码" prop="password">
         <el-input type="password" v-model="loginForm.password"></el-input>
       </el-form-item>
+      <el-checkbox v-model="rememberPwd" class="rememberPwd">记住密码</el-checkbox>
       <el-form-item class="btn_box">
         <el-button type="primary" @click="loginClick">登 录</el-button>
         <el-button type="info" @click="$router.push('/register')">注 册</el-button>
@@ -34,20 +35,47 @@ export default {
       rules: {
         account: [{ required: true, message: "请输入账号", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
-      }
+      },
+      rememberPwd: true
     };
   },
   methods: {
     loginClick() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          if (this.rememberPwd) {
+            this.setCookie("account", this.loginForm.account);
+            this.setCookie("password", this.loginForm.password);
+          } else {
+            this.setCookie("account", "");
+            this.setCookie("password", "");
+          }
           console.log(this.loginForm);
           // TODO: axios
         } else {
           return false;
         }
       });
+    },
+    setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+      var expires = "expires=" + d.toGMTString();
+      document.cookie = cname + "=" + cvalue + "; " + expires;
+    },
+    getCookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(";");
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+      }
+      return "";
     }
+  },
+  mounted() {
+    this.loginForm.account = this.getCookie("account");
+    this.loginForm.password = this.getCookie("password");
   }
 };
 </script>
@@ -59,6 +87,10 @@ export default {
   }
   .btn_box {
     float: right;
+  }
+  .rememberPwd {
+    margin-left: 50px;
+    margin-bottom: 20px;
   }
 }
 </style>
