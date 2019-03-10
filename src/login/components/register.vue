@@ -2,18 +2,28 @@
   <div id="register">
     <div class="title">用户注册 | REGISTER</div>
     <hr>
-    <el-form :model="loginForm" :rules="rules" label-width="80px" :label-position="'left'">
+    <el-form
+      :model="registerForm"
+      :rules="rules"
+      label-width="80px"
+      :label-position="'left'"
+      ref="registerForm"
+    >
       <el-form-item label="账号" prop="account">
-        <el-input v-model="loginForm.account"></el-input>
+        <el-input v-model="registerForm.account"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="loginForm.password"></el-input>
+        <el-input type="password" v-model="registerForm.password"></el-input>
       </el-form-item>
       <el-form-item label="重复密码" prop="password2">
-        <el-input v-model="loginForm.password2"></el-input>
+        <el-input type="password" v-model="registerForm.password2"></el-input>
+      </el-form-item>
+      <el-form-item label="签约" prop="editor">
+        <el-radio v-model="registerForm.editor" label="0">普通用户</el-radio>
+        <el-radio v-model="registerForm.editor" label="1">签约为作者</el-radio>
       </el-form-item>
       <el-form-item class="btn_box">
-        <el-button type="primary">登 录</el-button>
+        <el-button type="primary" @click="registerClick">注 册</el-button>
         <el-button type="info" @click="$router.push('/login')">返回登录</el-button>
       </el-form-item>
     </el-form>
@@ -23,18 +33,48 @@
 <script>
 export default {
   data() {
+    var validatePassword2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.registerForm.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
-      loginForm: {
+      registerForm: {
         account: "",
         password: "",
-        password2: ""
+        password2: "",
+        editor: "0"
       },
       rules: {
         account: [{ required: true, message: "请输入账号", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        password2: [{ required: true, message: "请输入密码", trigger: ["blur", "change"] }]
+        password2: [
+          { validator: validatePassword2, trigger: ["blur", "change"] }
+        ],
+        editor: [{ required: true, message: "请选择", trigger: "blur" }]
       }
     };
+  },
+  methods: {
+    registerClick() {
+      this.$refs.registerForm.validate(valid => {
+        if (valid) {
+          let obj = {
+            account: this.registerForm.account,
+            password: this.registerForm.password,
+            editor: this.registerForm.editor
+          };
+          console.log(obj);
+          // TODO: axios
+        } else {
+          return false;
+        }
+      });
+    }
   }
 };
 </script>
