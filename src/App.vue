@@ -17,7 +17,7 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <router-link to="/home" class="nav-link active" href="#">主页</router-link>
+            <router-link to="/home/newPublish" class="nav-link active" href="#">主页</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">排行</a>
@@ -57,7 +57,16 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    userInfo(){
+      this.axios.post('/userInfo').then(res=>{
+        console.log(res);
+      })
+    }
+  },
+  mounted(){
+    this.userInfo();
+  }
 };
 </script>
 
@@ -91,5 +100,18 @@ html {
 body {
   height: 100%;
   background-color: #f4f5f5 !important;
+}
+.v-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.v-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+  position: absolute;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 1s ease;
 }
 </style>

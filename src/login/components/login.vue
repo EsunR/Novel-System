@@ -1,4 +1,5 @@
 <template>
+import { setTimeout } from 'timers';
   <div id="login">
     <div class="title">用户登录 | LOGIN</div>
     <hr>
@@ -52,6 +53,14 @@ export default {
           }
           console.log(this.loginForm);
           // TODO: axios
+          this.axios.post('/login', this.loginForm).then(res=>{
+            if(res.code == 1){
+              this.$message('登录成功，正在跳转');
+              setTimeout(function(){
+                window.location.href = "/"
+              }, 1000)
+            }
+          })
         } else {
           return false;
         }

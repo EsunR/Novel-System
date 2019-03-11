@@ -69,7 +69,19 @@ export default {
             editor: this.registerForm.editor
           };
           console.log(obj);
-          // TODO: axios
+          this.axios
+            .post("/register", obj)
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message("注册成功，请登录");
+                this.$router.push('/login');
+              } else {
+                this.$message("该用户名已被占用，注册失败");
+              }
+            })
+            .catch(() => {
+              this.$message("无法连接服务器");
+            });
         } else {
           return false;
         }

@@ -99,7 +99,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          // TODO: AXIOS 发布草稿 回调后再调用一个删除草稿的API
+          // TODO: AXIOS 发布草稿 /addChapter 回调后再调用一个删除草稿的API /deleteDraft
           console.log(obj);
         });
       }
@@ -121,13 +121,12 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(()=>{
-          // TODO: axios 删除草稿
-          let id = this.form.id
+          // TODO: axios 删除草稿 /deleteDraft
         })
     }
   },
   mounted() {
-    // TODO: AXIOS 获取草稿详情挂载到 data上，之后将form内容初始化
+    // TODO: AXIOS 获取草稿详情挂载到 data上，之后将form内容初始化 
     this.formDataInit();
   }
 };

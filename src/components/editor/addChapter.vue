@@ -33,7 +33,7 @@
           <i class="el-icon-upload"></i>
           <el-upload
             ref="upload"
-            action="https://localhost:2333/api/novel/upload"
+            :action="COMMON.host + '/api/novel/upload'"
             :file-list="fileList"
             :on-change="selectFile"
             :on-remove="removeFile"
@@ -41,6 +41,7 @@
             :on-error="uploadError"
             :limit="1"
             :auto-upload="false"
+            :data="uploadAuthorization"
             accept=".txt"
           >
             <el-button slot="trigger" size="small" type="primary">选取文件 | 仅限.txt文件</el-button>
@@ -105,7 +106,10 @@ export default {
           }
         ]
       },
-      fileList: []
+      fileList: [],
+      uploadAuthorization: {
+        novelId: this.$route.params.id
+      }
     };
   },
   methods: {
@@ -194,12 +198,12 @@ export default {
         }
       }
     },
-    uploadSuccess() {
+    uploadSuccess(res) {
       this.form.content = "";
+      console.log(res);
+      this.loading = false;
       // TODO: 拿到返回值后上传form数据 /addChapter
-      // 1. 返回一个url
-      // 2.将url填入数据
-      // 3.发送数据
+      // 拿到的数据为章节ID
     },
     uploadError() {
       this.loading = false;
