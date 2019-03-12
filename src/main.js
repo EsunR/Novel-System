@@ -21,6 +21,15 @@ Vue.filter('introduction', function (str) {
   }
 })
 
+Vue.filter('identity', function (str) {
+  switch (str) {
+    case "editor":
+      return "作者";
+    case "reader":
+      return "读者";
+  }
+})
+
 Vue.prototype.COMMON = global
 
 new Vue({

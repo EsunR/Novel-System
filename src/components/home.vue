@@ -77,7 +77,6 @@ export default {
       font-size: 1.5rem;
       background-color: rgba(0, 0, 0, 0.1);
       color: rgba(0, 0, 0, 0.3);
-      display: none;
     }
     .card-text {
       font-size: 14px;

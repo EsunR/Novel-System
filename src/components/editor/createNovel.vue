@@ -13,7 +13,7 @@
           :limit="1"
           list-type="picture"
           :data="postData"
-          accept=".png,.jpg"
+          accept=".png, .jpg"
         >
           <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -100,8 +100,20 @@ export default {
     publish() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          console.log(this.form);
-          // TODO: AXIOS
+          this.axios
+            .post("/publishNovel", this.form)
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message("发布成功");
+                this.$router.push("/editor/novelManager");
+              } else {
+                this.$message("发布失败");
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message("无法连接服务器");
+            });
         }
       });
     },

@@ -10,6 +10,7 @@ function renderNoCover() {
   });
 }
 
+
 const host = "http://47.95.196.58:8080/api/nov";
 
 export default {

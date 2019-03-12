@@ -1,11 +1,17 @@
 <template>
   <div id="new">
     <h4 class="title">最新上架</h4>
+
     <div class="novel_list row">
       <div class="col-md-4" v-for="item in data" :key="item.id">
         <div class="card">
-          <div class="cover">无封面</div>
-          <img class="card-img-top" :src="item.cover" alt="Card image cap">
+          <div class="cover" v-show="item.cover == ''">无封面</div>
+          <img
+            class="card-img-top"
+            v-show="item.cover != ''"
+            :src="item.cover"
+            alt="Card image cap"
+          >
           <div class="card-body">
             <h5 class="card-title">{{item.novelName}}</h5>
             <p class="card-text">{{item.introduction | introduction}}</p>
@@ -57,7 +63,6 @@ export default {
     };
   },
   mounted() {
-    this.COMMON.renderNoCover();
     // TODO: Axios 挂载data
   }
 };

@@ -5,6 +5,12 @@ import home from './components/home.vue'
 import newPublish from './components/newPublish.vue'
 import search from './components/search.vue'
 
+// user
+import user from './components/user/user.vue'
+import collection from './components/user/collection.vue'
+import info from './components/user/info.vue'
+import recharge from './components/user/recharge.vue'
+
 // editor
 import editor from './components/editor/editor.vue'
 import createNovel from './components/editor/createNovel.vue'
@@ -72,6 +78,26 @@ export default new Router({
         {
           path: 'search',
           component: search
+        }
+      ]
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: user,
+      redirect: '/user/collection',
+      children: [
+        {
+          path: 'collection',
+          component: collection
+        },
+        {
+          path: 'info',
+          component: info
+        },
+        {
+          path: 'recharge',
+          component: recharge
         }
       ]
     }

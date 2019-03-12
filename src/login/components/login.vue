@@ -1,5 +1,4 @@
 <template>
-import { setTimeout } from 'timers';
   <div id="login">
     <div class="title">用户登录 | LOGIN</div>
     <hr>
@@ -19,7 +18,8 @@ import { setTimeout } from 'timers';
       <el-checkbox v-model="rememberPwd" class="rememberPwd">记住密码</el-checkbox>
       <el-form-item class="btn_box">
         <el-button type="primary" @click="loginClick">登 录</el-button>
-        <el-button type="info" @click="$router.push('/register')">注 册</el-button>
+        <el-button type="success" @click="$router.push('/register')">注 册</el-button>
+        <el-button type="info" @click="touristLogin">游客登录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -44,23 +44,34 @@ export default {
     loginClick() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          if (this.rememberPwd) {
-            this.setCookie("account", this.loginForm.account);
-            this.setCookie("password", this.loginForm.password);
-          } else {
-            this.setCookie("account", "");
-            this.setCookie("password", "");
-          }
           console.log(this.loginForm);
           // TODO: axios
-          this.axios.post('/login', this.loginForm).then(res=>{
-            if(res.code == 1){
-              this.$message('登录成功，正在跳转');
-              setTimeout(function(){
-                window.location.href = "/"
-              }, 1000)
-            }
-          })
+          this.axios
+            .post("/login", this.loginForm)
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message("登录成功，正在跳转");
+                console.log(res.data);
+                // 记住用户名、密码
+                if (this.rememberPwd) {
+                  this.setCookie("account", this.loginForm.account);
+                  this.setCookie("password", this.loginForm.password);
+                } else {
+                  this.setCookie("account", "");
+                  this.setCookie("password", "");
+                }
+                // 保存token
+                localStorage.setItem("token", res.data.data.token);
+                setTimeout(function() {
+                  window.location.href = "/";
+                }, 1000);
+              } else {
+                this.$message("账号或密码错误");
+              }
+            })
+            .catch(() => {
+              this.$message("账号不存在");
+            });
         } else {
           return false;
         }
@@ -80,6 +91,10 @@ export default {
         if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
       }
       return "";
+    },
+    touristLogin() {
+      localStorage.setItem("userLogin", "1");
+      window.location.href = "/";
     }
   },
   mounted() {
@@ -96,6 +111,13 @@ export default {
   }
   .btn_box {
     float: right;
+    @media screen and (max-width: 560px) {
+      float: initial;
+      display: flex;
+      justify-content: center;
+      margin-left: -50px;
+      margin-top: 10px;
+    }
   }
   .rememberPwd {
     margin-left: 50px;

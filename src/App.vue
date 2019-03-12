@@ -32,8 +32,12 @@
             icon="el-icon-edit"
             v-if="$store.state.identity == 'editor'|| $store.state.identity == 'admin'"
           >创 作</el-button>
-          <el-button icon="el-icon-info" v-if="$store.state.identity != 'tourist'">用户中心</el-button>
-          <el-button type="danger" plain v-if="$store.state.identity == 'tourist'">登 录</el-button>
+          <el-button
+            icon="el-icon-info"
+            v-if="$store.state.identity != 'tourist'"
+            @click="$router.push('/user')"
+          >用户中心</el-button>
+          <el-button type="danger" v-if="$store.state.identity == 'tourist'" @click="login">登 录</el-button>
         </span>
       </div>
     </nav>
@@ -58,13 +62,33 @@ export default {
     return {};
   },
   methods: {
-    userInfo(){
-      this.axios.post('/userInfo').then(res=>{
-        console.log(res);
-      })
+    userInfo() {
+      this.axios
+        .get("/userInfo")
+        .then(res => {
+          if (res.data.code == 1) {
+            let obj = res.data.data;
+            this.$store.state.account = obj.account;
+            this.$store.state.name = obj.name;
+            this.$store.state.identity = obj.identity;
+            this.$store.state.vp = obj.vp;
+            this.$store.state.ban = obj.ban;
+            this.$store.state.uid = obj.uid;
+          } else {
+            this.$message("登录出错");
+          }
+        })
+        .catch(() => {
+          this.$store.state.identity = "tourist";
+          this.$message("您正在以游客身份浏览");
+        });
+    },
+    login() {
+      localStorage.clear();
+      window.location.href = "/login.html";
     }
   },
-  mounted(){
+  mounted() {
     this.userInfo();
   }
 };
