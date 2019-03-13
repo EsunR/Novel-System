@@ -9,6 +9,7 @@
       :label-position="'top'"
     >
       <div class="title">修改章节：第{{form.chapter}}章</div>
+      <div class="title waring" v-if="published == 1">您已经发布过该章节，不能发布该草稿</div>
       <el-form-item label="章节标题" prop="title">
         <el-input v-model="form.title" placeholder="请填写"></el-input>
       </el-form-item>
@@ -19,9 +20,9 @@
       </el-form-item>
 
       <div class="btn_box">
-        <el-button @click="publish" type="primary">确定发布</el-button>
-        <el-button @click="save" type="info">保存草稿</el-button>
-        <el-button @click="deleteDraft" type="danger">删除草稿</el-button>
+        <el-button @click="publish" type="primary" v-if="published == 0">发布</el-button>
+        <el-button @click="save" type="info" v-if="published == 0">保存</el-button>
+        <el-button @click="deleteDraft" type="danger">删除</el-button>
       </div>
     </el-form>
   </div>
@@ -33,18 +34,13 @@ var editor = new E("#editor_editDraft");
 export default {
   data() {
     return {
-      data: {
-        title: "暴躁李延富在线打人",
-        content: "<p>从前有个叫李延富的老哥</p><p>脾气暴躁天天打人</p>",
-        chapter: "2",
-        novelId: "1"
-      },
+      publishedChapter: [],
+      published: 0,
       form: {
         title: "",
         content: "",
         novelId: "",
-        chapter: "",
-        id: this.$route.params.id
+        chapter: ""
       },
       rules: {
         title: [
@@ -59,14 +55,10 @@ export default {
   },
   methods: {
     formDataInit() {
-      this.form.title = this.data.title;
-      this.form.content = this.data.content;
-      this.form.novelId = this.data.novelId;
-      this.form.chapter = this.data.chapter;
       editor.customConfig.menus = [];
       editor.customConfig.zIndex = 1;
       editor.create();
-      editor.txt.html(this.data.content);
+      editor.txt.html(this.form.content);
     },
     check() {
       let check_content = editor.txt
@@ -88,9 +80,9 @@ export default {
     publish() {
       if (this.check()) {
         let obj = {
+          chapter: this.form.chapter,
           title: this.form.title,
           content: this.form.content,
-          contentUrl: "",
           upload: 0,
           novelId: this.form.novelId
         };
@@ -99,8 +91,21 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          // TODO: AXIOS 发布草稿 /addChapter 回调后再调用一个删除草稿的API /deleteDraft
           console.log(obj);
+          this.axios
+            .post("/addChapter", obj)
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message("发布成功，正在删除该草稿");
+                setTimeout(() => {
+                  this.deleteDraftSure();
+                }, 1000);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message("发布失败，无法连接服务器");
+            });
         });
       }
     },
@@ -111,23 +116,82 @@ export default {
           content: this.form.content,
           id: this.form.id
         };
-        // TODO: AXIOS 发送obj /saveChapterToDraft
         console.log(obj);
+        this.axios
+          .post("saveChapterToDraft", obj)
+          .then(res => {
+            if (res.data.code == 1) {
+              this.$message("保存草稿成功");
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message("保存失败，无法连接服务器");
+          });
       }
     },
-    deleteDraft(){
+    deleteDraft() {
       this.$confirm("您确定要删除草稿？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(()=>{
-          // TODO: axios 删除草稿 /deleteDraft
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.deleteDraftSure();
+      });
+    },
+    deleteDraftSure() {
+      this.axios
+        .get("/deleteDraft?id=" + this.$route.params.id)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.$message("删除成功");
+            this.$router.push("/editor/draft");
+          }
         })
+        .catch(err => {
+          console.log(err);
+          this.$message("服务器无法连接，删除失败");
+        });
+    },
+    getDraft(callbakc) {
+      this.axios
+        .get("/getDraft?id=" + this.$route.params.id)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.form = res.data.data;
+            this.form.id = this.$route.params.id;
+            this.formDataInit();
+            callbakc();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$message("无法连接服务器");
+        });
+    },
+    getPublished() {
+      this.axios
+        .get("/getNovelChapter?id=" + this.form.novelId)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.publishedChapter = res.data.data;
+            if (this.publishedChapter.length >= this.form.chapter) {
+              this.published = 1;
+            }
+          } else {
+            this.$message("获取章节失败");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$message("获取章节失败");
+        });
     }
   },
   mounted() {
-    // TODO: AXIOS 获取草稿详情挂载到 data上，之后将form内容初始化 
-    this.formDataInit();
+    this.getDraft(() => {
+      this.getPublished();
+    });
   }
 };
 </script>
@@ -148,6 +212,11 @@ h4 {
   line-height: 34px;
   background-color: #409eff;
   border-radius: 5px;
+}
+.waring {
+  background: #f56c6c;
+  width: 300px;
+  margin-top: 20px;
 }
 </style>
 
