@@ -45,7 +45,6 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           console.log(this.loginForm);
-          // TODO: axios
           this.axios
             .post("/login", this.loginForm)
             .then(res => {

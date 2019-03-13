@@ -25,6 +25,7 @@
       </li>
     </ul>
     <div class="btn_box">
+      <el-button type="primary" @click="signing" v-if="$store.state.identity == 'reader'">签约为作者</el-button>
       <el-button type="success" @click="$router.push('/user/recharge')">充值vip点</el-button>
     </div>
   </div>
@@ -53,6 +54,35 @@ export default {
           console.log(err);
           this.$message("与服务器连接失败");
         });
+    },
+    signing() {
+      this.$confirm("发布后的小说将不能更改，您确定发布吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // TODO: 签约作者api
+          this.axios
+            .get("/signing")
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message("签约成功，正在刷新页面");
+                setTimeout(function() {
+                  window.location.reload();
+                }, 1000);
+              } else {
+                this.$message("签约失败");
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message("与服务器连接失败");
+            });
+        })
+        .catch(() => {
+          this.$message("已取消");
+        });
     }
   },
   mounted() {
@@ -79,7 +109,7 @@ export default {
   .value {
     color: rgba($color: #000000, $alpha: 0.8);
   }
-  .el-tag{
+  .el-tag {
     margin-right: 10px;
   }
 }

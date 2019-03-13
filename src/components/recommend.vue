@@ -1,8 +1,10 @@
 <template>
-  <div id="search">
-    <h4>搜索结果</h4>
+  <div id="recommend">
+    <div class="title_box">
+      <div class="title">向您推荐：</div>
+      <el-button type="danger" icon="el-icon-refresh" @click="refresh">换一批</el-button>
+    </div>
     <div class="main">
-      <h3 v-if="data.length == 0">暂无结果</h3>
       <div class="novel_list row">
         <div class="col-md-4" v-for="item in data" :key="item.id">
           <div class="card">
@@ -29,18 +31,22 @@
 export default {
   data() {
     return {
-      data: []
+      data: [
+        {
+          id: "1",
+          cover: "",
+          novelName: "李先生传记",
+          introduction:
+            "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
+        }
+      ]
     };
   },
   methods: {
     getData() {
+      // TODO: 获取推荐
       this.axios
-        .get("/getSearch", {
-          params: {
-            searchWay: this.$route.query.searchWay,
-            key: this.$route.query.key
-          }
-        })
+        .get("/getRecommend")
         .then(res => {
           if (res.data.code == 1) {
             this.data = res.data.data;
@@ -50,27 +56,26 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.$message("无法连接服务器");
+          this.$message("服务器连接失败");
         });
+    },
+    refresh() {
+      this.getData();
     }
   },
   mounted() {
     this.getData();
-  },
-  watch: {
-    "$route.query": function() {
-      this.getData();
-    }
   }
 };
 </script>
 
 <style lang='scss' scoped>
-h4 {
-  margin: -30px -20px;
-  margin-bottom: 20px;
-  background-color: #007bff;
-  color: white;
-  padding: 20px;
+.title_box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  .title {
+    font-size: 1.5rem;
+  }
 }
 </style>

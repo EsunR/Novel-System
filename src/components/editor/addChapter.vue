@@ -14,7 +14,7 @@
           class="list-group-item d-flex justify-content-between align-items-center"
           v-for="item in data"
           :key="item.id"
-        >第{{item.chapter}}章 {{item.title}}</li>
+        >第{{item.chapter}}章：{{item.title}}</li>
       </ul>
     </div>
     <div class="add">
@@ -73,23 +73,7 @@ export default {
   data() {
     return {
       loading: false,
-      data: [
-        {
-          id: "111", // 章节id
-          chapter: "1",
-          title: "霸道李延富爱上我"
-        },
-        {
-          id: "112", // 章节id
-          chapter: "2",
-          title: "霸道李延富娶了我"
-        },
-        {
-          id: "113", // 章节id
-          chapter: "3",
-          title: "霸道李延富打了我"
-        }
-      ],
+      data: [],
       form: {
         chapter: "",
         title: "",
@@ -149,8 +133,23 @@ export default {
           } else {
             this.form.content = editor.txt.html();
             this.loading = true;
-            // TODO: AXIOS 直接上传form /addChapter
             console.log(this.form);
+            this.axios
+              .post("/addChapter", this.form)
+              .then(res => {
+                if (res.data.code == 1) {
+                  this.$message("发布成功，即将跳转到管理页面");
+                  setTimeout(() => {
+                    this.$router.push("/editor/novelManager");
+                  }, 1000);
+                } else {
+                  this.$message("发布失败");
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                this.$message("发布失败，无法连接服务器");
+              });
             this.loading = false;
           }
         }
@@ -193,6 +192,20 @@ export default {
             };
             // TODO: AXIOS 直接上传obj到草稿箱 /addChapter
             console.log(obj);
+            this.axios
+              .post("/addChapterToDraft", obj)
+              .then(res => {
+                if (res.data.code == 1) {
+                  this.$message("添加草稿成功，正在返回小说管理界面");
+                  setTimeout(() => {
+                    this.$router.push("/editor/novelManager");
+                  }, 1000);
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                this.$message("无法连接服务器");
+              });
             this.loading = false;
           }
         }
@@ -208,11 +221,27 @@ export default {
     uploadError() {
       this.loading = false;
       this.$message("上传失败！");
+    },
+    getData() {
+      this.axios
+        .get("/getNovelChapter?id=" + this.$route.params.id)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.data = res.data.data;
+            this.form.chapter = (this.data.length + 1).toString();
+          } else {
+            this.$message("获取章节失败");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$message("获取章节失败");
+        });
     }
   },
   mounted() {
-    this.form.chapter = this.data.length;
     this.createEditor();
+    this.getData();
   }
 };
 </script>

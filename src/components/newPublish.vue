@@ -34,36 +34,25 @@ export default {
           novelName: "李先生传记",
           introduction:
             "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
-        },
-        {
-          id: "2",
-          cover:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPmQbkPoRf-W6i38kuxCI6y_16S0AJP9UeURc8inEBSnI8353Qfg",
-          novelName: "李先生传记",
-          introduction:
-            "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
-        },
-        {
-          id: "3",
-          cover:
-            "http://wfqqreader-1252317822.image.myqcloud.com/cover/199/23311199/t5_23311199.jpg",
-          novelName: "李先生传记",
-          introduction:
-            "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
-        },
-        {
-          id: "4",
-          cover:
-            "http://wfqqreader-1252317822.image.myqcloud.com/cover/199/23311199/t5_23311199.jpg",
-          novelName: "李先生传记",
-          introduction:
-            "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
         }
       ]
     };
   },
   mounted() {
     // TODO: Axios 挂载data
+    this.axios
+      .get("/getNewPublish")
+      .then(res => {
+        if (res.data.code == 1) {
+          this.data = res.data.data;
+        } else {
+          this.$message("获取失败");
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.$message("服务器连接失败");
+      });
   }
 };
 </script>

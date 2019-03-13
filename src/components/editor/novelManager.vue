@@ -15,6 +15,7 @@
           <div class="card-body">
             <h5 class="card-title">{{item.novelName}}</h5>
             <p class="card-text">{{item.introduction | introduction}}</p>
+            <el-button @click="$router.push('/novel/' + item.id)" type="primary">查看</el-button>
             <el-button @click="$router.push('/editor/addChapter/' + item.id)" type="info">添加章节</el-button>
             <el-button @click="deleteNovel(item.id)" type="danger">删除</el-button>
           </div>
@@ -40,7 +41,6 @@ export default {
       })
         .then(() => {
           console.log(id);
-          // TODO: AXIOS 删除小说 /deleteNovel
           this.axios
             .get("/deleteNovel?id=" + id)
             .then(res => {

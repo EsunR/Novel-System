@@ -30,11 +30,9 @@ export default {
   },
   methods: {
     search() {
-      console.log(1);
       if (this.key != "") {
-        console.log(2);
         this.$router.push(
-          "/home/search?select=" + this.select + "&key=" + this.key
+          "/home/search?searchWay=" + this.select + "&key=" + this.key
         );
       }
     }
@@ -59,6 +57,7 @@ export default {
   background-color: #fff;
   margin: 30px auto;
   padding: 30px 20px;
+  padding-bottom: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }

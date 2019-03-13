@@ -63,7 +63,8 @@ export default {
         introduction: "",
         sort: "",
         cover: "",
-        price: ""
+        price: "",
+        time: ""
       },
       rules: {
         novelName: [
@@ -88,10 +89,7 @@ export default {
       postData: {
         // 测试token
         token:
-          "noucWTUuRY84Z0DSDJyJiszjO7OtRY3Vtj4yAWT1:G6Ec4kXe-fqWHMDMN9P6HFAVWBk=:eyJzY29wZSI6Im5vdmVsLXN5c3RlbSIsImRlYWRsaW5lIjoxNTgzODg4OTQwfQ==",
-        // 正式token（2019-10-11过期）
-        // token:
-        //   "noucWTUuRY84Z0DSDJyJiszjO7OtRY3Vtj4yAWT1:VSarI3w9Ry4K4N-BmtiOZnJibUE=:eyJzY29wZSI6ImltYWdlIiwiZGVhZGxpbmUiOjE1NzA3NTc0MTh9"
+          "noucWTUuRY84Z0DSDJyJiszjO7OtRY3Vtj4yAWT1:1D6bk4yfCW51XqjgG-igP_Bi6dc=:eyJzY29wZSI6Im5vdmVsLXN5c3RlbSIsImRlYWRsaW5lIjoxNTc1MTI5NjAwfQ=="
       },
       EncodedEntryURI: ""
     };
@@ -100,6 +98,7 @@ export default {
     publish() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.form.time = Date.parse(new Date()).toString();
           this.axios
             .post("/publishNovel", this.form)
             .then(res => {
@@ -129,7 +128,7 @@ export default {
       }
     },
     uploadSuccess(res) {
-      this.form.cover = "http://po6eky09y.bkt.clouddn.com/" + res.key;
+      this.form.cover = "http://study.esunr.xyz/" + res.key;
       this.EncodedEntryURI = res.key;
     }
   }

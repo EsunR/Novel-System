@@ -17,13 +17,13 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <router-link to="/home/newPublish" class="nav-link active" href="#">主页</router-link>
+            <router-link to="/home/newPublish" class="nav-link" href="#">主页</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">排行</a>
+            <router-link to="/home/ranking" class="nav-link" href="#">排行</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">推书区</a>
+            <router-link to="/home/recommend" class="nav-link" href="#">推书区</router-link>
           </li>
         </ul>
         <span class="navbar-text">

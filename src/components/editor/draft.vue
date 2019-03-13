@@ -1,6 +1,7 @@
 <template>
   <div id="draft">
     <h4>草稿箱</h4>
+    <h3 v-show="data.length == 0">无草稿</h3>
     <div class="main">
       <div class="card" v-for="item in data" :key="item.id">
         <div class="card-header">来自小说：《{{item.novelName}}》</div>
@@ -18,24 +19,21 @@
 export default {
   data() {
     return {
-      data: [
-        {
-          novelName: "李先生传记",
-          id: "1",
-          chapter: "1",
-          title: "暴躁李延富在线打人"
-        },
-        {
-          novelName: "李先生传记",
-          id: "2",
-          chapter: "1",
-          title: "暴躁李延富在线打人"
-        }
-      ]
+      data: []
     };
   },
-  mounted(){
-    // TODO: AXIOS 获取data数据 /getDraftBox
+  mounted() {
+    this.axios
+      .get("/getDraftBox")
+      .then(res => {
+        if (res.data.code == 1) {
+          this.data = res.data.data;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.$message('服务器连接失败');
+      });
   }
 };
 </script>

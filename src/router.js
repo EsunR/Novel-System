@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import noFound from './components/noFound.vue'
+
+// home
 import home from './components/home.vue'
 import newPublish from './components/newPublish.vue'
 import search from './components/search.vue'
+import ranking from './components/ranking.vue'
+import recommend from './components/recommend.vue'
 
 // user
 import user from './components/user/user.vue'
@@ -19,6 +23,9 @@ import income from './components/editor/income.vue'
 import addChapter from './components/editor/addChapter.vue'
 import draft from './components/editor/draft.vue'
 import editDraft from './components/editor/editDraft.vue'
+
+// novel
+import novel from './components/novel.vue'
 
 
 Vue.use(Router)
@@ -78,8 +85,21 @@ export default new Router({
         {
           path: 'search',
           component: search
+        },
+        {
+          path: 'ranking',
+          component: ranking
+        },
+        {
+          path: 'recommend',
+          component: recommend
         }
       ]
+    },
+    {
+      path: '/novel/:id',
+      name: 'novel',
+      component: novel
     },
     {
       path: '/user',
@@ -100,6 +120,6 @@ export default new Router({
           component: recharge
         }
       ]
-    }
+    },
   ]
 })
