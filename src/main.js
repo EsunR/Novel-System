@@ -17,7 +17,9 @@ axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 
 Vue.filter('introduction', function (str) {
   if (str.length > 50) {
-    return str.substring(1, 51) + " ......";
+    return str.substring(0, 51) + " ......";
+  } else {
+    return str;
   }
 })
 

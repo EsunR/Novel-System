@@ -123,12 +123,8 @@ export default {
           label: "现实"
         },
         {
-          value: "军事",
-          label: "军事"
-        },
-        {
-          value: "历史",
-          label: "历史"
+          value: "爱情",
+          label: "爱情"
         },
         {
           value: "游戏",

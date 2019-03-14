@@ -68,12 +68,7 @@ export default {
         .then(res => {
           if (res.data.code == 1) {
             let obj = res.data.data;
-            this.$store.state.account = obj.account;
-            this.$store.state.name = obj.name;
-            this.$store.state.identity = obj.identity;
-            this.$store.state.vp = obj.vp;
-            this.$store.state.ban = obj.ban;
-            this.$store.state.uid = obj.uid;
+            this.$store.commit("setData", obj);
           } else {
             this.$message("登录出错");
           }
@@ -115,7 +110,7 @@ export default {
 
 
 
-<style>
+<style lang="scss">
 html {
   height: 100%;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -137,5 +132,38 @@ body {
 .v-enter-active,
 .v-leave-active {
   transition: all 1s ease;
+}
+.novel_list {
+  .card {
+    color: rgba(0, 0, 0, 0.8);
+    margin-bottom: 20px;
+    .cover {
+      height: 25rem;
+      line-height: 25rem;
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      background-color: rgba(0, 0, 0, 0.1);
+      color: rgba(0, 0, 0, 0.3);
+    }
+    .card-body {
+      h5{
+        min-height: 48px;
+      }
+      p {
+        min-height: 63px;
+      }
+      button{
+        margin-top: 15px;
+      }
+    }
+    .card-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    img {
+      height: 25rem;
+    }
+  }
 }
 </style>

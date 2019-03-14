@@ -24,13 +24,13 @@ export default {
       } else if (!/^[0-9]*$/.test(this.rechargeNum)) {
         this.$message("请输入纯数字");
       } else {
-        // TODO: 用户充值
         this.axios
           .get("/recharge?vp=" + parseInt(this.rechargeNum) * 10)
           .then(res => {
             if (res.data.code == 1) {
               this.$message("充值成功，即将返回上一界面");
-              setTimeout(function() {
+              setTimeout(() => {
+                this.userInfo();
                 this.$router.go(-1);
               }, 1000);
             } else {
@@ -42,6 +42,22 @@ export default {
             this.$message("无法连接服务器");
           });
       }
+    },
+    userInfo() {
+      this.axios
+        .get("/userInfo")
+        .then(res => {
+          if (res.data.code == 1) {
+            let obj = res.data.data;
+            this.$store.commit("setData", obj);
+          } else {
+            this.$message("登录出错");
+          }
+        })
+        .catch(() => {
+          this.$store.state.identity = "tourist";
+          this.$message("您正在以游客身份浏览");
+        });
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div id="novelManager">
     <h4>管理小说</h4>
-    <div class="main row">
+    <div class="main novel_list row">
       <h3 style="padding-left: 10px; opacity: 0.8" v-show="data.length == 0">您还没有发布过小说</h3>
       <div class="col-md-4" v-for="item in data" :key="item.id">
         <div class="card">
@@ -13,7 +13,7 @@
             alt="Card image cap"
           >
           <div class="card-body">
-            <h5 class="card-title">{{item.novelName}}</h5>
+            <h5 class="card-title">{{item.novelname}}</h5>
             <p class="card-text">{{item.introduction | introduction}}</p>
             <el-button @click="$router.push('/novel/' + item.id)" type="primary">查看</el-button>
             <el-button @click="$router.push('/editor/addChapter/' + item.id)" type="info">添加章节</el-button>
@@ -102,21 +102,5 @@ h4 {
   color: white;
   margin-bottom: 20px;
 }
-.main {
-  .card {
-    margin-bottom: 1rem;
-    .cover {
-      height: 15rem;
-      line-height: 15rem;
-      width: 100%;
-      text-align: center;
-      font-size: 1.5rem;
-      background-color: rgba(0, 0, 0, 0.1);
-      color: rgba(0, 0, 0, 0.3);
-    }
-    img {
-      height: 15rem;
-    }
-  }
-}
+
 </style>

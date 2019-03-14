@@ -27,19 +27,10 @@
 export default {
   data() {
     return {
-      data: [
-        {
-          id: "1",
-          cover: "",
-          novelName: "李先生传记",
-          introduction:
-            "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
-        }
-      ]
+      data: []
     };
   },
   mounted() {
-    // TODO: Axios 挂载data
     this.axios
       .get("/getNewPublish")
       .then(res => {

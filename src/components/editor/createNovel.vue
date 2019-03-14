@@ -32,8 +32,7 @@
               <el-option label="仙侠" value="仙侠"></el-option>
               <el-option label="都市" value="都市"></el-option>
               <el-option label="现实" value="现实"></el-option>
-              <el-option label="军事" value="军事"></el-option>
-              <el-option label="历史" value="历史"></el-option>
+              <el-option label="爱情" value="爱情"></el-option>
               <el-option label="游戏" value="游戏"></el-option>
               <el-option label="科幻" value="科幻"></el-option>
             </el-select>

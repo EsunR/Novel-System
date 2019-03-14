@@ -64,26 +64,5 @@ export default {
 </style>
 
 <style lang="scss">
-.novel_list {
-  .card {
-    color: rgba(0, 0, 0, 0.8);
-    margin-bottom: 20px;
-    .cover {
-      height: 15rem;
-      line-height: 15rem;
-      width: 100%;
-      text-align: center;
-      font-size: 1.5rem;
-      background-color: rgba(0, 0, 0, 0.1);
-      color: rgba(0, 0, 0, 0.3);
-    }
-    .card-text {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    img {
-      height: 15rem;
-    }
-  }
-}
+
 </style>

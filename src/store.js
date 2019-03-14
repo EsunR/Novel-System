@@ -13,7 +13,11 @@ export default new Vuex.Store({
     uid: ""
   },
   mutations: {
-
+    setData(state, obj) {
+      for (let key in obj) {
+        state[key] = obj[key];
+      }
+    }
   },
   actions: {
 

@@ -50,6 +50,7 @@ export default {
         .then(res => {
           if (res.data.code == 1) {
             this.data = res.data.data;
+            this.$message("获取成功");
           } else {
             this.$message("获取失败");
           }

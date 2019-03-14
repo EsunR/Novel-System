@@ -33,7 +33,7 @@
           <i class="el-icon-upload"></i>
           <el-upload
             ref="upload"
-            :action="COMMON.host + '/api/novel/upload'"
+            :action="COMMON.host + '/uploadChapter'"
             :file-list="fileList"
             :on-change="selectFile"
             :on-remove="removeFile"
@@ -92,7 +92,7 @@ export default {
       },
       fileList: [],
       uploadAuthorization: {
-        novelId: this.$route.params.id
+        id: this.$route.params.id
       }
     };
   },
@@ -190,8 +190,6 @@ export default {
               novelId: this.form.novelId,
               chapter: this.form.chapter
             };
-            // TODO: AXIOS 直接上传obj到草稿箱 /addChapter
-            console.log(obj);
             this.axios
               .post("/addChapterToDraft", obj)
               .then(res => {

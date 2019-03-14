@@ -79,7 +79,6 @@ export default {
   },
   methods:{
     getData(){
-      // TODO: 获取排行榜
       let arr = ['downloadNum', 'clickNum', 'commentNum'];
       for(let item in arr){
         this.axios.get('/getRanking?sort=' + arr[item]).then(res=>{

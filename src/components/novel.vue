@@ -63,9 +63,7 @@
       </ul>
     </div>
 
-    <div id="comment">
-      
-    </div>
+    <div id="comment"></div>
   </div>
 </template>
 
@@ -91,7 +89,16 @@ export default {
         time: Date.parse(new Date())
       },
       chapter_data: [],
-      published_chapter_num: ""
+      published_chapter_num: "",
+      comment_data: [
+        {
+          id: 1,
+          uid: 1,
+          name: "张三",
+          content: "这小说真棒",
+          time: "1552480459000"
+        }
+      ]
     };
   },
   methods: {
@@ -236,8 +243,8 @@ export default {
   },
   mounted() {
     // 执行顺序：getChapter、getData、getStatus、blockRead
-    this.getChapter();
-    this.getCollectionStatus();
+    // this.getChapter();
+    // this.getCollectionStatus();
   }
 };
 </script>
@@ -301,5 +308,12 @@ export default {
     text-align: center;
     padding: 20px 0;
   }
+}
+#comment {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  margin-top: 30px;
 }
 </style>

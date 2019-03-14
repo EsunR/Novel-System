@@ -62,7 +62,6 @@ export default {
         type: "warning"
       })
         .then(() => {
-          // TODO: 签约作者api
           this.axios
             .get("/signing")
             .then(res => {
