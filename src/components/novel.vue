@@ -16,9 +16,14 @@
           <hr>
           <div class="introduction">简介：{{data.introduction}}</div>
           <div class="num_box">
-            <div class="num">阅读：{{data.clickNum}}</div>
-            <div class="num">下载：{{data.downloadNum}}</div>
-            <div class="num">评论：{{data.commentNum}}</div>
+            <div class="num">阅读：{{data.clicknum}}</div>
+            <div class="num">下载：{{data.downloadnum}}</div>
+            <div class="num">评论：{{data.commentnum}}</div>
+          </div>
+
+          <div class="editor_box">
+            <div class="editor_info">作者：{{data.editorName}}</div>
+            <div class="editor_info">发布日期：{{data.time | dateFormat('YYYY-MM-DD')}}</div>
           </div>
 
           <el-button-group class="btn_box">
@@ -74,20 +79,7 @@ export default {
       collectionStatus: 0,
       status: 0,
       novelId: this.$route.params.id,
-      data: {
-        novelName: "霸道李先生爱上我我该怎么办",
-        editorName: "李延富",
-        editorId: "1",
-        introduction:
-          "绝路下她被迫接受天价交易，本以为钱货两清，没想到五年后再相逢。他嘴上说着厌弃，身体却很诚实的耍流氓。她拼命守护的秘密忽然曝光，他誓要将她困在身边一睡到底！无耻！别以为你长得帅体力好就人见人爱！",
-        clickNum: "999",
-        commentNum: "999",
-        downloadNum: "999",
-        sort: "玄幻",
-        price: "1000",
-        cover: "http://study.esunr.xyz/FmmucXXxzfTLEKJ613SbzU-tD2Bc",
-        time: Date.parse(new Date())
-      },
+      data: {},
       chapter_data: [],
       published_chapter_num: "",
       comment_data: [
@@ -103,7 +95,6 @@ export default {
   },
   methods: {
     getData() {
-      // TODO: 获取小说的基本信息
       this.axios
         .get("/getNovelInfo?id=" + this.$route.params.id)
         .then(res => {
@@ -120,7 +111,6 @@ export default {
         });
     },
     getChapter() {
-      // TODO: 获取某小说的章节
       this.axios
         .get("/getNovelChapter?id=" + this.$route.params.id)
         .then(res => {
@@ -243,8 +233,8 @@ export default {
   },
   mounted() {
     // 执行顺序：getChapter、getData、getStatus、blockRead
-    // this.getChapter();
-    // this.getCollectionStatus();
+    this.getChapter();
+    this.getCollectionStatus();
   }
 };
 </script>
@@ -287,6 +277,14 @@ export default {
       position: absolute;
       bottom: 5px;
       right: 20px;
+    }
+  }
+  .editor_box {
+    margin-top: 20px;
+    .editor_info {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(0, 0, 0, 0.8);
     }
   }
 }

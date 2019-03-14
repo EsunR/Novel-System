@@ -213,8 +213,30 @@ export default {
       this.form.content = "";
       console.log(res);
       this.loading = false;
-      // TODO: 拿到返回值后上传form数据 /addChapter
-      // 拿到的数据为章节ID
+      let obj = {
+        chapter: this.form.chapter,
+        title: this.form.title,
+        upload: "1",
+        novelId: this.form.novelId,
+        id: res.data.id.toString()
+      };
+      console.log(obj);
+      if (res.code == 1) {
+        this.axios
+          .post("/addChapter", obj)
+          .then(res => {
+            if (res.data.code == 1) {
+              this.$message("发布成功，即将跳转到管理页面");
+              setTimeout(() => {
+                this.$router.push("/editor/novelManager");
+              }, 1000);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message("发布失败，无法连接服务器");
+          });
+      }
     },
     uploadError() {
       this.loading = false;

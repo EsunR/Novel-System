@@ -4,13 +4,13 @@
       <h4 v-if="data.length == 0" style="margin-left:20px;">暂无收藏</h4>
       <div class="col-md-4" v-for="item in data" :key="item.id">
         <div class="card">
-          <div class="cover">无封面</div>
+          <div class="cover" v-show="item.cover == ''">无封面</div>
           <img class="card-img-top" :src="item.cover" alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">{{item.novelName}}</h5>
             <p class="card-text">{{item.introduction | introduction}}</p>
             <el-button @click="$router.push('/novel/' + item.id)" type="primary">查看详情</el-button>
-            <el-button type="danger" @click="deleteCollection(item.id)">删除</el-button>
+            <el-button type="danger" @click="deleteCollection(item.id)">删除收藏</el-button>
           </div>
         </div>
       </div>
@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     deleteCollection(id) {
-      // TODO: AXIOS 删除收藏 /deleteCollection
       this.$confirm("您确定要删除吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -49,7 +48,6 @@ export default {
       });
     },
     getData() {
-      // TODO: 获取用户收藏
       this.axios
         .get("/getCollection")
         .then(res => {

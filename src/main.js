@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import moment from 'moment'
 import './plugins/element.js'
 import global from './common.vue'
 import "bootstrap"
@@ -21,6 +22,10 @@ Vue.filter('introduction', function (str) {
   } else {
     return str;
   }
+})
+
+Vue.filter('dateFormat', function (dataStr, pattern = "YYYY-MM-DD HH:mm:ss") {
+  return moment(parseInt(dataStr)).format(pattern);
 })
 
 Vue.filter('identity', function (str) {
