@@ -40,7 +40,7 @@
               v-if="collectionStatus == 1"
             >已收藏</el-button>
             <el-button type="primary" @click="buyNovel" v-if="status == 0">购买（{{data.price}}Vip点）</el-button>
-            <el-button type="info" v-if="status == 1">已购买</el-button>
+            <el-button type="info" v-if="status == 1">已购买<span v-if="data.editorId == $store.state.uid">（作者为您本人）</span></el-button>
           </el-button-group>
         </div>
       </div>
@@ -153,12 +153,11 @@ export default {
       }
     },
     getCollectionStatus() {
-      // TODO: 获取用户的收藏状态
       this.axios
         .get("/getCollectionStatus?id=" + this.$route.params.id)
         .then(res => {
           if (res.data.code == 1) {
-            if (res.data.status == 1) {
+            if (res.data.data.status == 1) {
               this.collectionStatus = 1;
             }
           }
@@ -169,7 +168,6 @@ export default {
         });
     },
     collection() {
-      // TODO: 收藏
       this.axios
         .get("/collection?id=" + this.$route.params.id)
         .then(res => {
@@ -184,7 +182,6 @@ export default {
         });
     },
     deleteCollectionByNovId() {
-      // TODO: 取消收藏
       this.axios
         .get("/deleteCollectionByNovId?id=" + this.novelId)
         .then(res => {
@@ -215,7 +212,7 @@ export default {
             .then(res => {
               if (res.data.code == 1) {
                 this.$message("购买成功");
-                window.location.reload();
+                // window.location.reload();
               }
             })
             .catch(err => {

@@ -25,7 +25,7 @@ export default {
         this.$message("请输入纯数字");
       } else {
         this.axios
-          .get("/recharge?vp=" + parseInt(this.rechargeNum) * 10)
+          .get("/recharge?vp=" + parseInt(this.rechargeNum) * 100)
           .then(res => {
             if (res.data.code == 1) {
               this.$message("充值成功，即将返回上一界面");
