@@ -63,7 +63,6 @@ export default {
     }
   },
   mounted() {
-    this.COMMON.renderNoCover();
     this.getData();
   }
 };

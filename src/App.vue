@@ -25,6 +25,9 @@
           <li class="nav-item">
             <router-link to="/home/recommend" class="nav-link" href="#">推书区</router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/home/customerService" class="nav-link" href="#">客服</router-link>
+          </li>
         </ul>
         <span class="navbar-text">
           <el-button
@@ -74,13 +77,13 @@ export default {
           }
         })
         .catch(() => {
-          this.$store.state.identity = "tourist";
+          this.$store.commit("setData", { identity: "tourist" });
           this.$message("您正在以游客身份浏览");
         });
     },
     login() {
       localStorage.clear();
-      window.location.href = "/login.html";
+      window.location.href = this.COMMON.login_location;
     }
   },
   mounted() {
@@ -147,13 +150,13 @@ body {
       color: rgba(0, 0, 0, 0.3);
     }
     .card-body {
-      h5{
+      h5 {
         min-height: 48px;
       }
       p {
         min-height: 63px;
       }
-      button{
+      button {
         margin-top: 15px;
       }
     }

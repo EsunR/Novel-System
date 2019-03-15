@@ -1,6 +1,7 @@
 <template>
   <div id="recommend">
-    <div class="title_box">
+    <div class="noRecommed" v-if="$store.state.identity == 'tourist'">请您登录后查看推荐</div>
+    <div class="title_box" v-if="$store.state.identity != 'tourist'">
       <div class="title">向您推荐：</div>
       <el-button type="danger" icon="el-icon-refresh" @click="refresh">换一批</el-button>
     </div>
@@ -31,20 +32,11 @@
 export default {
   data() {
     return {
-      data: [
-        {
-          id: "1",
-          cover: "",
-          novelName: "李先生传记",
-          introduction:
-            "这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说这是一本小说"
-        }
-      ]
+      data: []
     };
   },
   methods: {
     getData() {
-      // TODO: 获取推荐
       this.axios
         .get("/getRecommend")
         .then(res => {
@@ -65,7 +57,11 @@ export default {
     }
   },
   mounted() {
-    this.getData();
+    if (this.$store.state.identity == "tourist") {
+      return;
+    } else {
+      this.getData();
+    }
   }
 };
 </script>
@@ -78,5 +74,9 @@ export default {
   .title {
     font-size: 1.5rem;
   }
+}
+.noRecommed{
+  margin-bottom: 20px;
+  color: rgba($color: #000000, $alpha: .8)
 }
 </style>

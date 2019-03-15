@@ -1,9 +1,10 @@
 <template>
-  <div id="novel">
+  <div id="novel" v-loading.fullscreen.lock="loading" element-loading-text="正在加载小说信息">
     <div id="novel_info">
       <div class="row">
         <div class="col-md-4 cover">
-          <img :src="data.cover">
+          <div class="noCover" v-if="data.cover == ''">无封面</div>
+          <img v-if="data.cover != ''" :src="data.cover">
         </div>
         <div class="col-md-8 info">
           <div class="novelName">
@@ -27,20 +28,28 @@
           </div>
 
           <el-button-group class="btn_box">
-            <el-button
-              type="warning"
-              icon="el-icon-star-off"
-              @click="collection"
-              v-if="collectionStatus == 0"
-            >收藏</el-button>
-            <el-button
-              type="warning"
-              @click="deleteCollectionByNovId"
-              icon="el-icon-star-on"
-              v-if="collectionStatus == 1"
-            >已收藏</el-button>
-            <el-button type="primary" @click="buyNovel" v-if="status == 0">购买（{{data.price}}Vip点）</el-button>
-            <el-button type="info" v-if="status == 1">已购买<span v-if="data.editorId == $store.state.uid">（作者为您本人）</span></el-button>
+            <div v-if="$store.state.identity == 'tourist'">
+              <el-button type="info" @click="login">登录后可购买</el-button>
+            </div>
+            <div v-if="$store.state.identity != 'tourist'">
+              <el-button
+                type="warning"
+                icon="el-icon-star-off"
+                @click="collection"
+                v-if="collectionStatus == 0"
+              >收藏</el-button>
+              <el-button
+                type="warning"
+                @click="deleteCollectionByNovId"
+                icon="el-icon-star-on"
+                v-if="collectionStatus == 1"
+              >已收藏</el-button>
+              <el-button type="primary" @click="buyNovel" v-if="status == 0">购买（{{data.price}}Vip点）</el-button>
+              <el-button type="success" v-if="status == 1">
+                已购买
+                <span v-if="data.editorId == $store.state.uid">（作者为您本人）</span>
+              </el-button>
+            </div>
           </el-button-group>
         </div>
       </div>
@@ -59,8 +68,17 @@
           class="list-group-item d-flex justify-content-between align-items-center chapter_list_item"
           v-for="item in chapter_data"
           :key="item.id"
-          @click="$router.push('/chapter/' + item.id)"
-        >第{{item.chapter}}章：{{item.title}}</li>
+          @click="$router.push('/novel/' + novelId + '/' + item.chapter)"
+        >
+          第{{item.chapter}}章：{{item.title}}
+          <el-button
+            icon="el-icon-download"
+            type="primary"
+            circle
+            @click.stop="download(item.id)"
+            size="small"
+          ></el-button>
+        </li>
         <li
           class="list-group-item align-items-center block"
           v-if="this.status == 0"
@@ -68,7 +86,34 @@
       </ul>
     </div>
 
-    <div id="comment"></div>
+    <div id="comment">
+      <div class="tourist" v-if="$store.state.identity == 'tourist'">请您
+        <el-button type="danger" @click="login">登录</el-button>后评论
+      </div>
+      <div class="ban" v-if="ban == 1 && $store.state.identity != 'tourist'">
+        <i class="el-icon-error"></i> 您被禁言中
+      </div>
+      <div class="user_comment" v-if="$store.state.identity != 'tourist' && this.ban != 1">
+        <el-input type="textarea" v-model="user_comment" class="user_comment" rows="4"></el-input>
+        <el-button type="primary" @click="publishComment">发布评论</el-button>
+      </div>
+      <div class="comment_list">
+        <div class="no_commit" v-if="comment_data.length == 0">== 暂无评论 ==</div>
+        <div class="comment_card" v-for="(item,i) in comment_data" :key="i">
+          <div class="content">{{item.name}}：{{item.content}}</div>
+          <hr>
+          <div class="time">{{item.time | dateFormat('YYYY-MM-DD HH:mm')}}</div>
+        </div>
+        <el-button
+          type="primary"
+          @click="loadMore"
+          class="load_more"
+          v-if="comment_data.length < comment_total"
+          icon="el-icon-arrow-down"
+          plain
+        >加载更多</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,21 +121,18 @@
 export default {
   data() {
     return {
+      loading: true,
       collectionStatus: 0,
       status: 0,
       novelId: this.$route.params.id,
       data: {},
       chapter_data: [],
       published_chapter_num: "",
-      comment_data: [
-        {
-          id: 1,
-          uid: 1,
-          name: "张三",
-          content: "这小说真棒",
-          time: "1552480459000"
-        }
-      ]
+      comment_data: [],
+      user_comment: "",
+      comment_page: 1,
+      comment_total: 0,
+      ban: 1
     };
   },
   methods: {
@@ -128,44 +170,53 @@ export default {
         });
     },
     getStatus() {
-      // TODO: 获取小说的购买状态
-      this.axios
-        .get("/getStatus?novelId=" + this.novelId)
-        .then(res => {
-          if (res.data.code == 1) {
-            // 验证当前用户是不是作者,要在getData之后执行
-            if (this.$store.state.uid == this.data.editorId) {
-              this.status = 1;
-            } else {
-              this.status = res.data.data.status;
+      if (this.$store.state.identity == "tourist") {
+        this.blockRead();
+        return;
+      } else {
+        this.axios
+          .get("/getStatus?novelId=" + this.novelId)
+          .then(res => {
+            if (res.data.code == 1) {
+              // 验证当前用户是不是作者,要在getData之后执行
+              if (this.$store.state.uid == this.data.editorId) {
+                this.status = 1;
+              } else {
+                this.status = res.data.data.status;
+              }
+              this.blockRead();
             }
-            this.blockRead();
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.$message("获取购买状态失败，无法连接服务器");
-        });
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message("获取购买状态失败，无法连接服务器");
+          });
+      }
     },
     blockRead() {
       if (this.status == 0 && this.chapter_data.length > 3) {
         this.chapter_data = this.chapter_data.slice(0, 3);
       }
+      this.loading = false;
     },
     getCollectionStatus() {
-      this.axios
-        .get("/getCollectionStatus?id=" + this.$route.params.id)
-        .then(res => {
-          if (res.data.code == 1) {
-            if (res.data.data.status == 1) {
-              this.collectionStatus = 1;
+      if (this.$store.state.identity == "tourist") {
+        return;
+      } else {
+        this.axios
+          .get("/getCollectionStatus?id=" + this.$route.params.id)
+          .then(res => {
+            if (res.data.code == 1) {
+              if (res.data.data.status == 1) {
+                this.collectionStatus = 1;
+              }
             }
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.$message("获取收藏状态失败，无法连接服务器");
-        });
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message("获取收藏状态失败，无法连接服务器");
+          });
+      }
     },
     collection() {
       this.axios
@@ -206,13 +257,15 @@ export default {
         }
       )
         .then(() => {
-          // TODO: 购买小说
           this.axios
             .get("/buyNovel?id=" + this.novelId)
             .then(res => {
               if (res.data.code == 1) {
                 this.$message("购买成功");
-                // window.location.reload();
+                this.getChapter();
+              } else {
+                this.$router.push("/user/recharge");
+                this.$message("您的VIP点数不足，请充值");
               }
             })
             .catch(err => {
@@ -226,12 +279,94 @@ export default {
             message: "已取消购买"
           });
         });
+    },
+    publishComment() {
+      let str = this.user_comment.replace(/^\s+|\s+$/g, "");
+      if (str == "") {
+        this.$message("输入内容不能为空");
+        return;
+      }
+      let time = Date.parse(new Date());
+      let newArr = {
+        id: 0,
+        uid: this.$store.state.uid,
+        name: this.$store.state.name,
+        content: str,
+        time: time
+      };
+      this.comment_data.unshift(newArr);
+      let obj = {
+        novelId: this.novelId,
+        content: str,
+        time: time
+      };
+      this.axios
+        .post("/publishComment", obj)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.$message("发布评论成功");
+            this.getData();
+            this.user_comment = "";
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.message("评论失败，服务器无法连接");
+        });
+    },
+    getComment() {
+      this.axios
+        .get("/getComment?id=" + this.novelId + "&page=" + this.comment_page)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.comment_data = this.comment_data.concat(
+              res.data.data.comment_data
+            );
+            this.comment_total = res.data.data.total;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.message("评论获取失败，服务器无法连接");
+        });
+    },
+    loadMore() {
+      this.comment_page++;
+      this.getComment();
+    },
+    login() {
+      window.location.href = this.COMMON.login_location;
+    },
+    banTest() {
+      if (this.$store.state.identity == "tourist") {
+        return;
+      } else {
+        this.axios
+          .get("/userInfo")
+          .then(res => {
+            if (res.data.code == 1) {
+              if (res.data.data.ban != 1) {
+                this.ban = 0;
+              }
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.message("身份验证失败，服务器无法连接");
+          });
+      }
+    },
+    download(id) {
+      window.location.href = this.COMMON.host + "/download?id=" + id;
     }
   },
   mounted() {
     // 执行顺序：getChapter、getData、getStatus、blockRead
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
     this.getChapter();
     this.getCollectionStatus();
+    this.getComment();
+    this.banTest();
   }
 };
 </script>
@@ -250,9 +385,27 @@ export default {
       border-radius: 20px;
       margin-bottom: 10px;
     }
+    .noCover {
+      width: 100%;
+      height: 450px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.1);
+      font-size: 2rem;
+      line-height: 450px;
+      color: rgba(0, 0, 0, 0.6);
+      font-weight: bold;
+    }
   }
   .info {
-    min-height: 450px;
+    @media screen and (max-width: 768px) {
+      .btn_box {
+        display: block;
+        position: initial !important;
+        margin-top: 20px;
+      }
+    }
     color: rgba(0, 0, 0, 0.8);
     .novelName {
       font-size: 2rem;
@@ -310,5 +463,57 @@ export default {
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   margin-top: 30px;
+  .tourist {
+    text-align: center;
+    position: relative;
+    top: 30px;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+    button {
+      margin: 0 10px;
+    }
+  }
+  .ban {
+    color: white;
+    background-color: #f56c6c;
+    margin: -20px;
+    border-radius: 10px 10px 0 0;
+    line-height: 50px;
+    text-align: center;
+    margin-bottom: -60px;
+  }
+  .user_comment {
+    button {
+      margin-top: 20px;
+      float: right;
+    }
+  }
+  .comment_list {
+    margin-top: 80px;
+    .no_commit {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.5);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding-top: 1rem;
+    }
+    .comment_card {
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      color: rgba(0, 0, 0, 0.8);
+      margin-bottom: 20px;
+      .time {
+        text-align: right;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
+    .load_more {
+      display: block;
+      margin: 0 auto;
+    }
+  }
 }
 </style>

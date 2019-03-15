@@ -8,6 +8,7 @@
           class="flex-sm-fill text-sm-center nav-link active"
           @click="$router.push('/user/collection')"
         >收藏</a>
+        <a class="flex-sm-fill text-sm-center nav-link" @click="$router.push('/user/bought')">已购</a>
         <a class="flex-sm-fill text-sm-center nav-link" @click="$router.push('/user/info')">个人信息</a>
         <a class="flex-sm-fill text-sm-center nav-link" @click="logout">注销</a>
       </nav>
@@ -39,7 +40,7 @@ export default {
     },
     logout() {
       localStorage.clear();
-      window.location.href = "/login.html";
+      window.location.href = this.COMMON.login_location;
     }
   },
   mounted() {

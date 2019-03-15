@@ -8,12 +8,14 @@ import newPublish from './components/newPublish.vue'
 import search from './components/search.vue'
 import ranking from './components/ranking.vue'
 import recommend from './components/recommend.vue'
+import customerService from './components/customerService.vue'
 
 // user
 import user from './components/user/user.vue'
 import collection from './components/user/collection.vue'
 import info from './components/user/info.vue'
 import recharge from './components/user/recharge.vue'
+import bought from './components/user/bought.vue'
 
 // editor
 import editor from './components/editor/editor.vue'
@@ -26,6 +28,7 @@ import editDraft from './components/editor/editDraft.vue'
 
 // novel
 import novel from './components/novel.vue'
+import chapter from './components/chapter.vue'
 
 
 Vue.use(Router)
@@ -93,6 +96,10 @@ export default new Router({
         {
           path: 'recommend',
           component: recommend
+        },
+        {
+          path: 'customerService',
+          component: customerService
         }
       ]
     },
@@ -100,6 +107,11 @@ export default new Router({
       path: '/novel/:id',
       name: 'novel',
       component: novel
+    },
+    {
+      path: '/novel/:novelId/:chapter',
+      name: 'chapter',
+      component: chapter
     },
     {
       path: '/user',
@@ -118,6 +130,10 @@ export default new Router({
         {
           path: 'recharge',
           component: recharge
+        },
+        {
+          path: 'bought',
+          component: bought
         }
       ]
     },
