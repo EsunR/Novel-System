@@ -34,7 +34,15 @@ Vue.filter('identity', function (str) {
       return "作者";
     case "reader":
       return "读者";
+    case "admin":
+      return "管理员";
   }
+})
+
+Vue.filter('arr', function (str) {
+  str = str.toString();
+  str = str.replace('[', "").replace(']', "")
+  return str;
 })
 
 Vue.prototype.COMMON = global

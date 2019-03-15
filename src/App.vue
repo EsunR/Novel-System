@@ -31,6 +31,11 @@
         </ul>
         <span class="navbar-text">
           <el-button
+            @click="$router.push('/admin')"
+            icon="el-icon-menu"
+            v-if="$store.state.identity == 'admin'"
+          >后台管理</el-button>
+          <el-button
             @click="$router.push('/editor/createNovel')"
             icon="el-icon-edit"
             v-if="$store.state.identity == 'editor'|| $store.state.identity == 'admin'"

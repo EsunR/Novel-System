@@ -36,7 +36,7 @@ export default {
       })
       .catch(err => {
         console.log(err);
-        this.message('无法获取已购列表，服务器无法连接');
+        this.$message('无法获取已购列表，服务器无法连接');
       });
     }
   }

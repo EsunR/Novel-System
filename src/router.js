@@ -30,6 +30,13 @@ import editDraft from './components/editor/editDraft.vue'
 import novel from './components/novel.vue'
 import chapter from './components/chapter.vue'
 
+// admin
+import admin from './components/admin/admin.vue'
+import userList from './components/admin/userList.vue'
+import novelList from './components/admin/novelList.vue'
+import reportList from './components/admin/reportList.vue'
+import feedback from './components/admin/feedback.vue'
+
 
 Vue.use(Router)
 
@@ -137,5 +144,29 @@ export default new Router({
         }
       ]
     },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: admin,
+      redirect: '/admin/userList',
+      children: [
+        {
+          path: 'userList',
+          component: userList
+        },
+        {
+          path: 'novelList',
+          component: novelList
+        },
+        {
+          path: 'reportList',
+          component: reportList
+        },
+        {
+          path: 'feedback',
+          component: feedback
+        }
+      ]
+    }
   ]
 })

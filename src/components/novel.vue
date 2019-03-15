@@ -311,7 +311,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.message("评论失败，服务器无法连接");
+          this.$message("评论失败，服务器无法连接");
         });
     },
     getComment() {
@@ -327,7 +327,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.message("评论获取失败，服务器无法连接");
+          this.$message("评论获取失败，服务器无法连接");
         });
     },
     loadMore() {
@@ -352,7 +352,7 @@ export default {
           })
           .catch(err => {
             console.log(err);
-            this.message("身份验证失败，服务器无法连接");
+            this.$message("身份验证失败，服务器无法连接");
           });
       }
     },

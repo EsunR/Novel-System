@@ -44,7 +44,7 @@ export default {
         this.buy = 1;
         this.getChapterData();
         return;
-      } else if ((this.$store.state.uid == this.novelData.editorId)) {
+      } else if (this.$store.state.uid == this.novelData.editorId) {
         this.buy = 1;
         this.getChapterData();
         return;
@@ -61,7 +61,7 @@ export default {
           })
           .catch(err => {
             console.log(err);
-            this.message("无法检查购买状态，服务器无法连接");
+            this.$message("无法检查购买状态，请您检查是否登录");
           });
       }
     },
@@ -75,7 +75,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.message("无法获取小说信息，服务器无法连接");
+          this.$message("无法获取小说信息，服务器无法连接");
         });
     },
     getChapterData() {
@@ -93,11 +93,13 @@ export default {
               this.loading = false;
               document.body.scrollTop = document.documentElement.scrollTop = 0;
             }, 200);
+          } else {
+            this.$message("您尚未登录，不能查看后几章的内容！");
           }
         })
         .catch(err => {
           console.log(err);
-          this.message("无法获取章节信息，服务器无法连接");
+          this.$message("无法获取章节信息，服务器无法连接");
           this.loading = false;
         });
     },
@@ -126,7 +128,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.message("无法获取章节信息，服务器无法连接");
+          this.$message("无法获取章节信息，服务器无法连接");
         });
     }
   },

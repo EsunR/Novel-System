@@ -65,7 +65,7 @@ export default {
             })
             .catch(err => {
               console.log(err);
-              this.message("服务器无法连接");
+              this.$message("服务器无法连接");
             });
         } else {
           console.log("error submit!!");
