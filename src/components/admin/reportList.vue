@@ -113,6 +113,7 @@ h4 {
   padding: 20px;
   border-radius: 10px;
   align-items: center;
+  margin-bottom: 20px;
   @media screen and (max-width: 994px) {
     display: block;
     .box_right {

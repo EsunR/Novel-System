@@ -15,6 +15,18 @@
         </div>
       </div>
     </div>
+    <div class="title">- 为您推荐 -</div>
+    <div class="novel_list row">
+      <div class="col-md-4" v-for="item in recommendData" :key="item.id">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{item.novelName}}</h5>
+            <p class="card-text">{{item.introduction | introduction}}</p>
+            <el-button @click="$router.push('/novel/' + item.novelId)" type="primary">查看详情</el-button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,7 +34,8 @@
 export default {
   data() {
     return {
-      data: []
+      data: [],
+      recommendData:[]
     };
   },
   methods: {
@@ -60,13 +73,42 @@ export default {
         .catch(() => {
           this.$message("无法连接服务器");
         });
+    },
+    getRecommend(){
+      this.axios
+        .get('/getRecommend ')
+        .then(res => {
+          if (res.data.code == 1) {
+            this.recommendData = res.data.data.slice(0,3);
+          }
+      })
+      .catch(err => {
+        console.log(err);
+        this.$message('服务器无法连接');
+      });
     }
   },
   mounted() {
     this.getData();
+    this.getRecommend();
   }
 };
 </script>
 
 <style lang='scss' scoped>
+.title{
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: rgba($color: #000000, $alpha: 0.5);
+  font-weight: bold;
+}
+h4{
+  display: block;
+  width: 100%;
+  margin-right: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
+}
 </style>
