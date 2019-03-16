@@ -4,7 +4,7 @@
       <el-menu :default-active="'userList'" class="el-menu-demo" mode="horizontal" @select="handleSelect">
         <el-menu-item index="userList">用户列表</el-menu-item>
         <el-menu-item index="novelList">小说管理</el-menu-item>
-        <el-menu-item index="reportList">举报管理</el-menu-item>
+        <el-menu-item index="reportList">留言管理</el-menu-item>
         <el-menu-item index="feedback">用户反馈</el-menu-item>
       </el-menu>
     </div>

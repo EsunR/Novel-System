@@ -9,7 +9,7 @@
           <div class="card-body">
             <h5 class="card-title">{{item.novelName}}</h5>
             <p class="card-text">{{item.introduction | introduction}}</p>
-            <el-button @click="$router.push('/novel/' + item.id)" type="primary">查看详情</el-button>
+            <el-button @click="$router.push('/novel/' + item.novelId)" type="primary">查看详情</el-button>
             <el-button type="danger" @click="deleteCollection(item.id)">删除收藏</el-button>
           </div>
         </div>

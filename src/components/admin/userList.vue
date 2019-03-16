@@ -80,11 +80,11 @@ export default {
   },
   methods: {
     getUserList(mode) {
-      // TODO: 获取两种模式的用户列表
       this.axios
         .get("/getUserList?ban=" + mode + "&page=" + this.page)
         .then(res => {
           if (res.data.code == 1) {
+            this.total = res.data.data.total;
             if (this.page == 1) {
               this.userList = res.data.data.userList;
             } else {
@@ -114,9 +114,8 @@ export default {
       this.getUserList(this.mode);
     },
     managerUser(id, action) {
-      // TODO: 操作用户
       this.axios
-        .get("/userBan?id=" + id + "&action=" + action)
+        .get("/managerUser?id=" + id + "&action=" + action)
         .then(res => {
           if (res.data.code == 1) {
             this.$message("操作成功");
@@ -125,6 +124,7 @@ export default {
                 this.userList.splice(i, 1);
               }
             }
+            this.total--;
           }
         })
         .catch(err => {
@@ -136,7 +136,7 @@ export default {
       this.managerUser(id, "ban");
     },
     unBan(id) {
-      this.managerUser(id, "unBan");
+      this.managerUser(id, "unban");
     },
     deleteUser(id) {
       this.managerUser(id, "delete");

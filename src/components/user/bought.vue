@@ -9,7 +9,7 @@
           <div class="card-body">
             <h5 class="card-title">{{item.novelName}}</h5>
             <p class="card-text">{{item.introduction | introduction}}</p>
-            <el-button @click="$router.push('/novel/' + item.id)" type="primary">查看详情</el-button>
+            <el-button @click="$router.push('/novel/' + item.novelId)" type="primary">查看详情</el-button>
           </div>
         </div>
       </div>
@@ -25,20 +25,22 @@ export default {
     };
   },
   methods: {
-    getData(){
-      //TODO: 获取已购买小说
+    getData() {
       this.axios
-        .get('/getBought')
+        .get("/getBought")
         .then(res => {
           if (res.data.code == 1) {
-            this.data = res.data.data
+            this.data = res.data.data;
           }
-      })
-      .catch(err => {
-        console.log(err);
-        this.$message('无法获取已购列表，服务器无法连接');
-      });
+        })
+        .catch(err => {
+          console.log(err);
+          this.$message("无法获取已购列表，服务器无法连接");
+        });
     }
+  },
+  mounted() {
+    this.getData();
   }
 };
 </script>

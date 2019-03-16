@@ -19,6 +19,12 @@
           </div>
         </div>
       </div>
+      <el-button
+        type="primary"
+        style="display: flex; margin: 0 auto;"
+        v-if="data.length < total"
+        @click="loadMore"
+      >加载更多</el-button>
     </div>
   </div>
 </template>
@@ -27,23 +33,41 @@
 export default {
   data() {
     return {
-      data: []
+      data: [],
+      page: 1,
+      total: 0
     };
   },
+  methods: {
+    getData() {
+      this.axios
+        .get("/getNewPublish?page=" + this.page)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.total = res.data.data.total;
+            if (this.page == 1) {
+              this.data = res.data.data.novelList;
+            } else {
+              let arr = this.data;
+              let arr2 = res.data.data.novelList;
+              this.data = [...arr, ...arr2];
+            }
+          } else {
+            this.$message("获取失败");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$message("服务器连接失败");
+        });
+    },
+    loadMore(){
+      this.page++;
+      this.getData();
+    }
+  },
   mounted() {
-    this.axios
-      .get("/getNewPublish")
-      .then(res => {
-        if (res.data.code == 1) {
-          this.data = res.data.data;
-        } else {
-          this.$message("获取失败");
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        this.$message("服务器连接失败");
-      });
+    this.getData();
   }
 };
 </script>

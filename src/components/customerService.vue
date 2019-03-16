@@ -53,7 +53,6 @@ export default {
             email: this.form.email
           };
           console.log(obj);
-          // TODO: 发送反馈信息
           this.axios
             .post("/customerService", obj)
             .then(res => {

@@ -102,7 +102,10 @@
         <div class="comment_card" v-for="(item,i) in comment_data" :key="i">
           <div class="content">{{item.name}}：{{item.content}}</div>
           <hr>
-          <div class="time">{{item.time | dateFormat('YYYY-MM-DD HH:mm')}}</div>
+          <div class="time">
+            <span class="report" @click="report(item.id)">举报</span>
+            {{item.time | dateFormat('YYYY-MM-DD HH:mm')}}
+          </div>
         </div>
         <el-button
           type="primary"
@@ -358,6 +361,37 @@ export default {
     },
     download(id) {
       window.location.href = this.COMMON.host + "/download?id=" + id;
+    },
+    report(id) {
+      this.$confirm("您确定要举报该留言吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.axios
+            .get("/reportComment?id=" + id)
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message({
+                  type: "success",
+                  message: "举报成功!"
+                });
+              } else {
+                this.$message("您当前无法举报");
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message("举报失败，无法连接服务器");
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "操作已取消"
+          });
+        });
     }
   },
   mounted() {
@@ -509,6 +543,11 @@ export default {
         font-size: 14px;
         color: rgba(0, 0, 0, 0.5);
       }
+    }
+    .report {
+      text-decoration: underline;
+      margin-right: 10px;
+      cursor: pointer;
     }
     .load_more {
       display: block;
