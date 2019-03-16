@@ -56,7 +56,7 @@ export default {
         });
     },
     signing() {
-      this.$confirm("发布后的小说将不能更改，您确定发布吗？", "提示", {
+      this.$confirm("您却定要签约为作者吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
