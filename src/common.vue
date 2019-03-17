@@ -11,7 +11,7 @@ function renderNoCover() {
 }
 
 
-const host = "http://47.95.196.58:8765/novelshop/api/nov/";
+const host = "http://localhost:8080/api/nov/";
 
 const login_location = "/login.html"
 

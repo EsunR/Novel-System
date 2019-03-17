@@ -62,7 +62,7 @@ export default {
                 // 保存token
                 localStorage.setItem("token", res.data.data.token);
                 setTimeout(function() {
-                  window.location.href = "/";
+                  window.location.href = "/index.html";
                 }, 1000);
               } else {
                 this.$message("账号或密码错误");
@@ -93,7 +93,7 @@ export default {
     },
     touristLogin() {
       localStorage.setItem("userLogin", "1");
-      window.location.href = "/";
+      window.location.href = "/index.html";
     }
   },
   mounted() {
