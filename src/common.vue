@@ -11,10 +11,10 @@ function renderNoCover() {
 }
 
 
-const host = "http://localhost:8080/api/nov/";
+const host = "http://47.95.196.58:8091/api/nov/";
 
-const login_location = "/login.html"
-const index_location = "/index.html"
+const login_location = "./login.html"
+const index_location = "./index.html"
 
 export default {
   renderNoCover,

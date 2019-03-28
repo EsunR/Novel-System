@@ -5,9 +5,13 @@
 - login_location：登录页面相对于服务器根目录的地址
 - index_location：主页相对于服务器根目录的地址
 
+DEMO：http://www.esunr.xyz/git/NovelStore/login.html#/login
+
+
 ![](https://img.shields.io/badge/Base-Vue2.2-brightgreen.svg)
 ![](https://img.shields.io/badge/Build-Vue--Cli3-orange.svg)
 ![](https://img.shields.io/badge/Design-ElementUI-blue.svg) 
+
 
 
 # 主要需求
