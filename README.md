@@ -7,11 +7,12 @@
 
 DEMO：http://www.esunr.xyz/git/NovelStore/login.html#/login
 
+API文档参见`./API_Doc.md` 数据库文档参见`./DataBase_Doc.md`
 
 ![](https://img.shields.io/badge/Base-Vue2.2-brightgreen.svg)
 ![](https://img.shields.io/badge/Build-Vue--Cli3-orange.svg)
 ![](https://img.shields.io/badge/Design-ElementUI-blue.svg) 
-
+![](https://img.shields.io/badge/Installer-NPM%206.9.0-red.svg)
 
 
 # 主要需求
