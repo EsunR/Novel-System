@@ -5,7 +5,7 @@
 - login_location：登录页面相对于服务器根目录的地址
 - index_location：主页相对于服务器根目录的地址
 
-DEMO：http://www.esunr.xyz/git/NovelStore/login.html#/login
+DEMO：http://www.esunr.xyz/git/NovelStore/login.html#/login 【服务器已关闭】
 
 API文档参见`./API_Doc.md` 数据库文档参见`./DataBase_Doc.md`
 
